@@ -52,3 +52,6 @@ temp/
 
 # Optional eslint cache
 .eslintcache
+
+# Vercel
+.vercel
