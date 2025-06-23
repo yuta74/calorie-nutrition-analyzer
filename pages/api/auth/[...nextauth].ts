@@ -6,6 +6,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default NextAuth({
+  debug: process.env.NODE_ENV === 'development',
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -19,6 +20,10 @@ export default NextAuth({
         session.user.id = user.id
       }
       return session
+    },
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log('SignIn callback:', { user, account, profile, email })
+      return true
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
