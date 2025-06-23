@@ -1,11 +1,14 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import ImageUpload from '@/components/ImageUpload'
 import NutritionDisplay from '@/components/NutritionDisplay'
 import { AnalysisResult, NutritionAnalysis } from '@/types'
+import Link from 'next/link'
 
 export default function Home() {
+  const { data: session, status } = useSession()
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<NutritionAnalysis | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -49,16 +52,75 @@ export default function Home() {
     setUploadedImage(null)
   }
 
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            🍽️ カロリー・栄養バランス分析
+          </h1>
+          <p className="text-gray-600 mb-6">
+            食事記録と健康管理を始めるには
+            <br />
+            ログインが必要です
+          </p>
+          <button
+            onClick={() => window.location.href = '/api/auth/signin'}
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+          >
+            ログインする
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="container mx-auto max-w-4xl">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🍽️ カロリー・栄養バランス分析
-          </h1>
-          <p className="text-lg text-gray-600">
-            写真を撮って、食べ物のカロリーと栄養成分を自動で分析します
-          </p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+              🍽️ カロリー・栄養バランス分析
+            </h1>
+            <p className="text-lg text-gray-600">
+              こんにちは、{session.user?.name}さん！
+            </p>
+          </div>
+          <div className="flex gap-4">
+            <Link
+              href="/profile"
+              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            >
+              プロファイル
+            </Link>
+            <Link
+              href="/goals"
+              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            >
+              目標設定
+            </Link>
+            <Link
+              href="/calendar"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            >
+              カレンダー
+            </Link>
+            <button
+              onClick={() => signOut()}
+              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+            >
+              ログアウト
+            </button>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">

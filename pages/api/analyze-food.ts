@@ -2,6 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { IncomingForm } from 'formidable'
 import fs from 'fs'
 import OpenAI from 'openai'
+import { getServerSession } from 'next-auth/next'
+import GoogleProvider from 'next-auth/providers/google'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { prisma } from '@/lib/prisma'
 import { AnalysisResult, FoodItem } from '@/types'
 
 export const config = {
@@ -13,6 +17,17 @@ export const config = {
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
+
+const authOptions = {
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+}
 
 function parseApiResponse(apiResponse: string): FoodItem[] {
   try {
@@ -107,6 +122,39 @@ JSON形式:
       totalSugar: foods.reduce((sum, food) => sum + food.sugar, 0),
       totalSodium: foods.reduce((sum, food) => sum + food.sodium, 0),
       foods
+    }
+
+    // Save to database if user is authenticated
+    const session = await getServerSession(req, res, authOptions)
+    if (session?.user?.email) {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { email: session.user.email },
+        })
+
+        if (user) {
+          // Save image to a simple storage (in production, use cloud storage)
+          const imageUrl = `data:image/jpeg;base64,${base64Image}`
+
+          await prisma.foodRecord.create({
+            data: {
+              userId: user.id,
+              imageUrl,
+              totalCalories: nutritionData.totalCalories,
+              totalProtein: nutritionData.totalProtein,
+              totalCarbs: nutritionData.totalCarbs,
+              totalFat: nutritionData.totalFat,
+              totalFiber: nutritionData.totalFiber,
+              totalSugar: nutritionData.totalSugar,
+              totalSodium: nutritionData.totalSodium,
+              foods: JSON.stringify(foods),
+            },
+          })
+        }
+      } catch (dbError) {
+        console.error('Database save error:', dbError)
+        // Continue with response even if database save fails
+      }
     }
 
     res.status(200).json({ success: true, data: nutritionData })
