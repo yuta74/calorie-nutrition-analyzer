@@ -7,7 +7,8 @@ const prisma = new PrismaClient()
 
 export default NextAuth({
   debug: process.env.NODE_ENV === 'development',
-  adapter: PrismaAdapter(prisma),
+  // 一時的にPrismaアダプターを無効化してテスト
+  // adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -15,9 +16,9 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, token, user }) {
-      if (session.user) {
-        session.user.id = user.id
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub
       }
       return session
     },
