@@ -74,6 +74,11 @@ jobs:
         run: |
           DEPLOY_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "QA Environment deployed to: $DEPLOY_URL"
+          
+      - name: Set QA Environment Alias
+        run: |
+          # 固定のQA URLにエイリアスを設定
+          vercel alias $DEPLOY_URL qa-calorie-analyzer.vercel.app --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }} || echo "Alias setting failed, but continuing..."
 
   Deploy-Production:
     runs-on: ubuntu-latest
