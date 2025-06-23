@@ -2,66 +2,72 @@
 
 AI画像認識を使用した食品のカロリーと栄養分析アプリケーションです。
 
-## 開発環境設定
+## 環境構成
 
-このプロジェクトは開発環境と本番環境を分離した構成になっています。
+このプロジェクトは3つの環境で構成されています：
 
-### ブランチ構成
+### 🏠 ローカル環境
+- **用途**: 個人の開発マシンでの開発作業
+- **URL**: `http://localhost:3000`
+- **設定**: `.env.local`
 
-- `main` - 本番環境用
-- `develop` - 開発環境用
-- `feature/*` - 機能開発用
+### 🔧 QA環境（Vercel Preview）
+- **用途**: チーム内テスト・品質保証
+- **URL**: `https://qa-calorie-analyzer.vercel.app`
+- **ブランチ**: `develop`
+- **設定**: `.env.development` (Vercel Environment Variables)
 
-### 環境変数
+### 🚀 本番環境（Vercel Production）
+- **用途**: 一般ユーザー向けサービス
+- **URL**: `https://calorie-analyzer.vercel.app`
+- **ブランチ**: `main`
+- **設定**: `.env.production` (Vercel Environment Variables)
 
-環境別の設定ファイルを作成してください：
+## 環境変数設定
 
+### ローカル開発用
 ```bash
-# .env.development (開発環境用)
-NODE_ENV=development
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-development-secret-key-here
-OPENAI_API_KEY=your-openai-api-key-here
-DATABASE_URL="file:./dev.db"
-NEXT_PUBLIC_APP_ENV=development
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
-
-# .env.production (本番環境用)
-NODE_ENV=production
-NEXTAUTH_URL=https://your-production-domain.com
-NEXTAUTH_SECRET=your-production-secret-key-here
-OPENAI_API_KEY=your-openai-api-key-here
-DATABASE_URL="file:./prod.db"
-NEXT_PUBLIC_APP_ENV=production
-NEXT_PUBLIC_API_BASE_URL=https://your-production-domain.com/api
+# .env.local.exampleをコピーして.env.localを作成
+cp .env.local.example .env.local
+# 必要な値を設定してください
 ```
 
-### 開発コマンド
+### Vercel環境変数
+Vercelダッシュボードで以下の環境変数を設定：
+- `OPENAI_API_KEY`
+- `NEXTAUTH_SECRET`
+- `DATABASE_URL`
+
+## 開発コマンド
 
 ```bash
-# ローカル開発（ポート3000）
+# ローカル開発
 npm run dev:local
 
-# 開発環境（ポート3001）
-npm run dev:staging
+# Vercel開発環境（ローカル）
+npm run vercel:dev
 
-# 開発環境ビルド
-npm run build:dev
+# ビルド
+npm run build          # 通常ビルド
+npm run build:qa       # QA環境用ビルド
+npm run build:prod     # 本番環境用ビルド
 
-# 本番環境ビルド
-npm run build:prod
-
-# 開発環境起動
-npm run start:dev
-
-# 本番環境起動
-npm run start:prod
+# Vercelデプロイ
+npm run vercel:deploy      # プレビューデプロイ
+npm run vercel:deploy:prod # 本番デプロイ
 ```
 
-### デプロイ
+## デプロイフロー
 
-- `develop`ブランチにプッシュ → 開発環境にデプロイ
-- `main`ブランチにプッシュ → 本番環境にデプロイ
+### 🔄 自動デプロイ
+- `develop`ブランチにプッシュ → **QA環境**に自動デプロイ
+- `main`ブランチにプッシュ → **本番環境**に自動デプロイ
+- PR作成 → **プレビュー環境**に自動デプロイ
+
+### 🔗 環境URL
+- **QA**: https://qa-calorie-analyzer.vercel.app
+- **本番**: https://calorie-analyzer.vercel.app
+- **プレビュー**: 各PRごとに自動生成
 
 ## 技術スタック
 

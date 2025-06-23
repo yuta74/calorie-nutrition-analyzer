@@ -42,7 +42,7 @@ jobs:
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  Deploy-Development:
+  Deploy-QA:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
     steps:
@@ -58,20 +58,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build project (Development)
-        run: npm run build:dev
+      - name: Build project (QA)
+        run: npm run build
       
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       
-      - name: Pull Vercel Environment Information
+      - name: Pull Vercel Environment Information (Preview)
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
       
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       
-      - name: Deploy Project Artifacts to Vercel (Development)
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel (QA)
+        id: deploy-qa
+        run: |
+          DEPLOY_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "QA Environment deployed to: $DEPLOY_URL"
+          echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+      
+      - name: Set QA Environment Alias
+        run: |
+          vercel alias ${{ steps.deploy-qa.outputs.deploy_url }} qa-calorie-analyzer.vercel.app --token=${{ secrets.VERCEL_TOKEN }} || true
 
   Deploy-Production:
     runs-on: ubuntu-latest
