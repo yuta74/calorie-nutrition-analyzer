@@ -84,12 +84,23 @@ export default function Home() {
             <br />
             ログインが必要です
           </p>
-          <button
-            onClick={() => window.location.href = '/api/auth/signin'}
-            className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-          >
-            ログインする
-          </button>
+          <div className="space-y-4">
+            <button
+              onClick={() => window.location.href = '/api/auth/signin'}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            >
+              ログインする
+            </button>
+            <div className="text-center">
+              <p className="text-sm text-gray-500 mb-2">または</p>
+              <Link
+                href="/guest"
+                className="inline-block bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm"
+              >
+                ゲストとして試す
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     )
