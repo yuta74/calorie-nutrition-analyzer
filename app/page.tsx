@@ -13,14 +13,15 @@ export default function Home() {
   const [result, setResult] = useState<NutritionAnalysis | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
-  const [isQAEnvironment, setIsQAEnvironment] = useState(false)
+  const [shouldSkipAuth, setShouldSkipAuth] = useState(false)
 
   useEffect(() => {
-    // クライアントサイドでQA環境を判定
-    if (typeof window !== 'undefined') {
-      const isQA = window.location.hostname.includes('qa-') || window.location.hostname === 'localhost'
-      setIsQAEnvironment(isQA)
-    }
+    // 環境変数またはホスト名で認証スキップを判定
+    const skipAuth = process.env.SKIP_AUTH === 'true' || 
+                     (typeof window !== 'undefined' && 
+                      (window.location.hostname.includes('qa-') || 
+                       window.location.hostname === 'localhost'))
+    setShouldSkipAuth(skipAuth)
   }, [])
 
   const handleImageUpload = async (file: File) => {
@@ -69,7 +70,7 @@ export default function Home() {
     )
   }
 
-  if (!session && !isQAEnvironment) {
+  if (!session && !shouldSkipAuth) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
@@ -101,7 +102,7 @@ export default function Home() {
               🍽️ カロリー・栄養バランス分析
             </h1>
             <p className="text-lg text-gray-600">
-              {session?.user?.name ? `こんにちは、${session.user.name}さん！` : `QA環境での動作確認中 (${typeof window !== 'undefined' ? window.location.hostname : 'SSR'})`}
+              {session?.user?.name ? `こんにちは、${session.user.name}さん！` : `QA環境での動作確認中 (Skip: ${shouldSkipAuth}, Host: ${typeof window !== 'undefined' ? window.location.hostname : 'SSR'})`}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 md:gap-4">

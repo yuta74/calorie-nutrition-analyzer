@@ -9,6 +9,7 @@ const nextConfig = {
   env: {
     CUSTOM_APP_ENV: process.env.NODE_ENV,
     APP_VERSION: process.env.npm_package_version,
+    SKIP_AUTH: process.env.SKIP_AUTH,
   },
   // 環境別設定
   ...(process.env.NODE_ENV === 'development' && {
