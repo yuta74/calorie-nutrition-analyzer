@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 
 interface ImageUploadProps {
   onImageUpload: (file: File) => void
@@ -15,6 +15,14 @@ export default function ImageUpload({ onImageUpload, isLoading }: ImageUploadPro
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
   const [isVideoReady, setIsVideoReady] = useState(false)
+  const [isHTTPS, setIsHTTPS] = useState(true)
+
+  useEffect(() => {
+    // クライアントサイドでHTTPS状態を確認
+    if (typeof window !== 'undefined') {
+      setIsHTTPS(location.protocol === 'https:' || location.hostname === 'localhost')
+    }
+  }, [])
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -28,7 +36,7 @@ export default function ImageUpload({ onImageUpload, isLoading }: ImageUploadPro
     setIsVideoReady(false)
     
     // HTTPS環境チェック
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    if (!isHTTPS) {
       setCameraError('カメラ機能はHTTPS環境でのみ利用できます。')
       return
     }
@@ -180,7 +188,7 @@ export default function ImageUpload({ onImageUpload, isLoading }: ImageUploadPro
           {/* 使用方法のヒント */}
           <div className="text-sm text-gray-600 text-center">
             <p>📱 カメラで撮影するか、既存の画像を選択してください</p>
-            {location.protocol !== 'https:' && location.hostname !== 'localhost' && (
+            {!isHTTPS && (
               <p className="text-orange-600 mt-1">
                 ⚠️ カメラ機能はHTTPS環境でのみ利用可能です
               </p>

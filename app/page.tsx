@@ -17,11 +17,13 @@ export default function Home() {
   const [shouldSkipAuth, setShouldSkipAuth] = useState(false)
 
   useEffect(() => {
+    // クライアントサイドでのみ実行
+    if (typeof window === 'undefined') return
+    
     // 開発環境またはプレビュー環境でのみ認証スキップ
     const skipAuth = (process.env.NODE_ENV === 'development' ||
-                     (typeof window !== 'undefined' && 
-                      (window.location.hostname.includes('qa-') || 
-                       window.location.hostname === 'localhost'))) &&
+                     (window.location.hostname.includes('qa-') || 
+                      window.location.hostname === 'localhost')) &&
                      process.env.SKIP_AUTH === 'true'
     setShouldSkipAuth(skipAuth)
   }, [])

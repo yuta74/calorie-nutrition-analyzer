@@ -41,10 +41,10 @@ export default function CalendarPage() {
 
   useEffect(() => {
     // 開発環境またはプレビュー環境でのみ認証スキップ
-    const shouldSkipAuth = (process.env.NODE_ENV === 'development' ||
-                           (typeof window !== 'undefined' && 
+    const shouldSkipAuth = typeof window !== 'undefined' &&
+                           (process.env.NODE_ENV === 'development' ||
                             (window.location.hostname.includes('qa-') || 
-                             window.location.hostname === 'localhost'))) &&
+                             window.location.hostname === 'localhost')) &&
                            process.env.SKIP_AUTH === 'true'
     
     if (shouldSkipAuth) {

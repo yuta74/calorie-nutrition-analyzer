@@ -18,6 +18,9 @@ export default function PWAInstaller() {
   const [isStandalone, setIsStandalone] = useState(false)
 
   useEffect(() => {
+    // クライアントサイドでのみ実行
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') return
+
     // Service Worker登録
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
