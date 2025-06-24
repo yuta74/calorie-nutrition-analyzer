@@ -37,6 +37,7 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [dailySummaries, setDailySummaries] = useState<Map<string, DailySummary>>(new Map())
   const [userGoal, setUserGoal] = useState<number>(2000)
+  const [goalType, setGoalType] = useState<string>('maintain')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -72,6 +73,9 @@ export default function CalendarPage() {
         const data = await response.json()
         if (data.dailyCalorieGoal) {
           setUserGoal(data.dailyCalorieGoal)
+        }
+        if (data.goalType) {
+          setGoalType(data.goalType)
         }
       }
     } catch (error) {
@@ -115,14 +119,42 @@ export default function CalendarPage() {
         const percentage = (summary.calories / userGoal) * 100
         let colorClass = 'bg-gray-200'
         
-        if (percentage >= 90 && percentage <= 110) {
-          colorClass = 'bg-green-500'
-        } else if (percentage >= 70 && percentage < 90) {
-          colorClass = 'bg-yellow-500'
-        } else if (percentage > 110) {
-          colorClass = 'bg-red-500'
-        } else if (percentage > 0) {
-          colorClass = 'bg-blue-400'
+        // 目標タイプに応じて評価基準を変更
+        if (goalType === 'weight_gain') {
+          // 増量の場合：カロリーを多く摂取することが目標
+          if (percentage >= 110) {
+            colorClass = 'bg-green-500' // 目標超過が良い
+          } else if (percentage >= 90 && percentage < 110) {
+            colorClass = 'bg-yellow-500' // 目標近い
+          } else if (percentage >= 70 && percentage < 90) {
+            colorClass = 'bg-blue-400' // 記録あり
+          } else if (percentage > 0) {
+            colorClass = 'bg-red-500' // 目標不足が悪い
+          }
+        } else if (goalType === 'weight_loss') {
+          // 減量の場合：カロリーを抑えることが目標
+          if (percentage >= 70 && percentage <= 90) {
+            colorClass = 'bg-green-500' // 適度にカロリー制限
+          } else if (percentage >= 60 && percentage < 70) {
+            colorClass = 'bg-yellow-500' // やや制限
+          } else if (percentage > 90) {
+            colorClass = 'bg-red-500' // カロリー取りすぎ
+          } else if (percentage > 0) {
+            colorClass = 'bg-blue-400' // 記録あり
+          }
+        } else {
+          // 体重維持の場合：目標カロリー付近が理想
+          if (percentage >= 90 && percentage <= 110) {
+            colorClass = 'bg-green-500' // 目標達成
+          } else if (percentage >= 80 && percentage < 90) {
+            colorClass = 'bg-yellow-500' // 目標に近い（少し少ない）
+          } else if (percentage > 110 && percentage <= 120) {
+            colorClass = 'bg-yellow-500' // 目標に近い（少し多い）
+          } else if (percentage > 120) {
+            colorClass = 'bg-red-500' // 目標超過
+          } else if (percentage > 0) {
+            colorClass = 'bg-blue-400' // 記録あり
+          }
         }
         
         return (
@@ -193,10 +225,21 @@ export default function CalendarPage() {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-4">月間カレンダー</h2>
             <div className="mb-4">
-              <div className="flex items-center gap-4 text-sm">
+              <div className="text-sm mb-2">
+                <span className="font-medium text-gray-700">
+                  目標タイプ: {
+                    goalType === 'weight_gain' ? '増量' :
+                    goalType === 'weight_loss' ? '減量' : '体重維持'
+                  }
+                </span>
+              </div>
+              <div className="flex items-center gap-4 text-sm flex-wrap">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span>目標達成</span>
+                  <span>
+                    {goalType === 'weight_gain' ? '十分摂取' :
+                     goalType === 'weight_loss' ? '適度制限' : '目標達成'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -208,7 +251,10 @@ export default function CalendarPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <span>目標超過</span>
+                  <span>
+                    {goalType === 'weight_gain' ? '摂取不足' :
+                     goalType === 'weight_loss' ? '摂取過多' : '目標から大幅乖離'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -259,15 +305,26 @@ export default function CalendarPage() {
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
                         className={`h-2 rounded-full ${
-                          selectedDateSummary.calories / userGoal > 1 ? 'bg-red-500' :
-                          selectedDateSummary.calories / userGoal > 0.9 ? 'bg-green-500' :
-                          'bg-blue-500'
+                          goalType === 'weight_gain' 
+                            ? (selectedDateSummary.calories / userGoal >= 1.1 ? 'bg-green-500' :
+                               selectedDateSummary.calories / userGoal >= 0.9 ? 'bg-yellow-500' :
+                               'bg-red-500')
+                            : goalType === 'weight_loss'
+                            ? (selectedDateSummary.calories / userGoal <= 0.9 && selectedDateSummary.calories / userGoal >= 0.7 ? 'bg-green-500' :
+                               selectedDateSummary.calories / userGoal < 0.7 ? 'bg-yellow-500' :
+                               'bg-red-500')
+                            : (selectedDateSummary.calories / userGoal >= 0.9 && selectedDateSummary.calories / userGoal <= 1.1 ? 'bg-green-500' :
+                               selectedDateSummary.calories / userGoal > 1.1 ? 'bg-red-500' :
+                               'bg-blue-500')
                         }`}
                         style={{ width: `${Math.min((selectedDateSummary.calories / userGoal) * 100, 100)}%` }}
                       ></div>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
                       目標達成率: {Math.round((selectedDateSummary.calories / userGoal) * 100)}%
+                      {goalType === 'weight_gain' && selectedDateSummary.calories >= userGoal * 1.1 && ' ✅ 増量目標達成'}
+                      {goalType === 'weight_loss' && selectedDateSummary.calories <= userGoal * 0.9 && selectedDateSummary.calories >= userGoal * 0.7 && ' ✅ 減量目標達成'}
+                      {goalType === 'maintain' && selectedDateSummary.calories >= userGoal * 0.9 && selectedDateSummary.calories <= userGoal * 1.1 && ' ✅ 維持目標達成'}
                     </p>
                   </div>
                 </div>
