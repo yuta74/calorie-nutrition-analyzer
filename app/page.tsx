@@ -17,13 +17,12 @@ export default function Home() {
   const [shouldSkipAuth, setShouldSkipAuth] = useState(false)
 
   useEffect(() => {
-    // 環境変数またはホスト名で認証スキップを判定
-    const skipAuth = process.env.SKIP_AUTH === 'true' || 
-                     process.env.NODE_ENV === 'development' ||
+    // 開発環境またはプレビュー環境でのみ認証スキップ
+    const skipAuth = (process.env.NODE_ENV === 'development' ||
                      (typeof window !== 'undefined' && 
                       (window.location.hostname.includes('qa-') || 
-                       window.location.hostname === 'localhost' ||
-                       window.location.hostname.includes('vercel.app')))
+                       window.location.hostname === 'localhost'))) &&
+                     process.env.SKIP_AUTH === 'true'
     setShouldSkipAuth(skipAuth)
   }, [])
 

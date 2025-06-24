@@ -31,8 +31,22 @@ export default function NotificationsPage() {
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default')
 
   useEffect(() => {
+    // 開発環境またはプレビュー環境でのみ認証スキップ
+    const shouldSkipAuth = (process.env.NODE_ENV === 'development' ||
+                           (typeof window !== 'undefined' && 
+                            (window.location.hostname.includes('qa-') || 
+                             window.location.hostname === 'localhost'))) &&
+                           process.env.SKIP_AUTH === 'true'
+    
+    if (shouldSkipAuth) {
+      // 認証スキップ時はダミーデータで初期化
+      fetchNotificationSettings()
+      checkNotificationPermission()
+      return
+    }
+    
     if (status === 'unauthenticated') {
-      router.push('/auth/signin')
+      router.push('/')
       return
     }
     

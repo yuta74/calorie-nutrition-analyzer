@@ -26,12 +26,12 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 }
 
-// 認証スキップ環境の判定
-const shouldSkipAuth = process.env.VERCEL_ENV === 'preview' || 
-                       process.env.NODE_ENV === 'development' ||
-                       process.env.SKIP_AUTH === 'true' ||
-                       !process.env.GOOGLE_CLIENT_ID ||
-                       process.env.GOOGLE_CLIENT_ID === 'dummy'
+// 認証スキップ環境の判定（本番環境では常に認証有効）
+const shouldSkipAuth = (process.env.VERCEL_ENV === 'preview' || 
+                        process.env.NODE_ENV === 'development') &&
+                       (process.env.SKIP_AUTH === 'true' ||
+                        !process.env.GOOGLE_CLIENT_ID ||
+                        process.env.GOOGLE_CLIENT_ID === 'dummy')
 
 const authHandler = shouldSkipAuth 
   ? (req: any, res: any) => {
