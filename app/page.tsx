@@ -86,37 +86,37 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="container mx-auto max-w-4xl">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+        <div className="mb-8">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
               🍽️ カロリー・栄養バランス分析
             </h1>
             <p className="text-lg text-gray-600">
               こんにちは、{session.user?.name}さん！
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4">
             <Link
               href="/profile"
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
             >
               プロファイル
             </Link>
             <Link
               href="/goals"
-              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
             >
               目標設定
             </Link>
             <Link
               href="/calendar"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
             >
               カレンダー
             </Link>
             <button
               onClick={() => signOut()}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
             >
               ログアウト
             </button>
