@@ -26,12 +26,16 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 }
 
-// QA環境では認証を完全にスキップ
-const isQAEnvironment = process.env.VERCEL_ENV === 'preview' || process.env.NODE_ENV === 'development'
+// 認証スキップ環境の判定
+const shouldSkipAuth = process.env.VERCEL_ENV === 'preview' || 
+                       process.env.NODE_ENV === 'development' ||
+                       process.env.SKIP_AUTH === 'true' ||
+                       !process.env.GOOGLE_CLIENT_ID ||
+                       process.env.GOOGLE_CLIENT_ID === 'dummy'
 
-const authHandler = isQAEnvironment 
+const authHandler = shouldSkipAuth 
   ? (req: any, res: any) => {
-      res.status(200).json({ message: 'Auth disabled for QA environment' })
+      res.status(200).json({ message: 'Auth disabled for environment' })
     }
   : NextAuth(authOptions)
 

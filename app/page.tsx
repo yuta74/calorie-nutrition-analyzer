@@ -19,9 +19,11 @@ export default function Home() {
   useEffect(() => {
     // 環境変数またはホスト名で認証スキップを判定
     const skipAuth = process.env.SKIP_AUTH === 'true' || 
+                     process.env.NODE_ENV === 'development' ||
                      (typeof window !== 'undefined' && 
                       (window.location.hostname.includes('qa-') || 
-                       window.location.hostname === 'localhost'))
+                       window.location.hostname === 'localhost' ||
+                       window.location.hostname.includes('vercel.app')))
     setShouldSkipAuth(skipAuth)
   }, [])
 
@@ -103,7 +105,9 @@ export default function Home() {
               🍽️ カロリー・栄養バランス分析
             </h1>
             <p className="text-lg text-gray-600">
-              {session?.user?.name ? `こんにちは、${session.user.name}さん！` : `QA環境での動作確認中 (Skip: ${shouldSkipAuth}, Host: ${typeof window !== 'undefined' ? window.location.hostname : 'SSR'})`}
+              {session?.user?.name ? `こんにちは、${session.user.name}さん！` : 
+               shouldSkipAuth ? `認証スキップモード (Host: ${typeof window !== 'undefined' ? window.location.hostname : 'SSR'})` :
+               'ログインが必要です'}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 md:gap-4">
