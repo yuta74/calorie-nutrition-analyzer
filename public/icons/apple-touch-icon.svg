@@ -1,0 +1,12 @@
+<svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="grad" cx="50%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#60a5fa"/>
+        <stop offset="100%" stop-color="#3b82f6"/>
+      </radialGradient>
+    </defs>
+    <rect width="180" height="180" rx="27" fill="url(#grad)"/>
+    <circle cx="90" cy="62.99999999999999" r="27" fill="white" opacity="0.9"/>
+    <rect x="36" y="99.00000000000001" width="108" height="45" rx="9" fill="white" opacity="0.9"/>
+    <text x="90" y="135" text-anchor="middle" fill="#3b82f6" font-family="Arial" font-size="21.599999999999998" font-weight="bold">🍽️</text>
+  </svg>

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import ImageUpload from '@/components/ImageUpload'
 import NutritionDisplay from '@/components/NutritionDisplay'
+import PWAInstaller from '@/components/PWAInstaller'
 import { AnalysisResult, NutritionAnalysis } from '@/types'
 import Link from 'next/link'
 
@@ -195,6 +196,7 @@ export default function Home() {
           </p>
         </div>
       </div>
+      <PWAInstaller />
     </main>
   )
 }
