@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   title: 'カロリー・栄養バランス分析',
   description: '写真を撮ってカロリーと栄養バランスを自動計算',
   manifest: '/manifest.json',
-  themeColor: '#3b82f6',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -32,6 +31,10 @@ export const metadata: Metadata = {
       { url: '/icons/icon-152x152.svg', sizes: '152x152', type: 'image/svg+xml' },
     ],
   },
+}
+
+export const viewport = {
+  themeColor: '#3b82f6',
 }
 
 export default function RootLayout({

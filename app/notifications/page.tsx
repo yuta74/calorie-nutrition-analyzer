@@ -58,7 +58,7 @@ export default function NotificationsPage() {
         // テスト通知を送信
         new Notification('カロリー分析アプリ', {
           body: '通知設定が完了しました！',
-          icon: '/favicon.ico',
+          icon: '/icons/icon-192x192.svg',
           tag: 'test-notification'
         })
       } else {
@@ -129,12 +129,8 @@ export default function NotificationsPage() {
         if (notificationPermission === 'granted') {
           new Notification('食事の時間です！', {
             body: '今日の食事を記録しましょう',
-            icon: '/favicon.ico',
-            tag: `meal-reminder-${time}`,
-            actions: [
-              { action: 'record', title: '記録する' },
-              { action: 'snooze', title: '後で' }
-            ]
+            icon: '/icons/icon-192x192.svg',
+            tag: `meal-reminder-${time}`
           })
         }
       }, timeUntilNotification)
