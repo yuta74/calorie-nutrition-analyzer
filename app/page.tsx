@@ -60,7 +60,10 @@ export default function Home() {
     )
   }
 
-  if (!session) {
+  // QA環境での認証スキップ
+  const isQAEnvironment = process.env.NODE_ENV === 'development' || window.location.hostname.includes('qa-')
+  
+  if (!session && !isQAEnvironment) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
@@ -92,7 +95,7 @@ export default function Home() {
               🍽️ カロリー・栄養バランス分析
             </h1>
             <p className="text-lg text-gray-600">
-              こんにちは、{session.user?.name}さん！
+              {session?.user?.name ? `こんにちは、${session.user.name}さん！` : 'QA環境での動作確認中'}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 md:gap-4">
@@ -114,12 +117,14 @@ export default function Home() {
             >
               カレンダー
             </Link>
-            <button
-              onClick={() => signOut()}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
-            >
-              ログアウト
-            </button>
+            {session && (
+              <button
+                onClick={() => signOut()}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
+              >
+                ログアウト
+              </button>
+            )}
           </div>
         </div>
 
