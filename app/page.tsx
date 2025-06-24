@@ -95,28 +95,28 @@ export default function Home() {
               こんにちは、{session.user?.name}さん！
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-2 md:gap-4">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 md:gap-4">
             <Link
               href="/profile"
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
+              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
             >
               プロファイル
             </Link>
             <Link
               href="/goals"
-              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
+              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
             >
               目標設定
             </Link>
             <Link
               href="/calendar"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
             >
               カレンダー
             </Link>
             <button
               onClick={() => signOut()}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-3 md:px-4 rounded-lg transition-colors text-sm md:text-base"
+              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
             >
               ログアウト
             </button>
