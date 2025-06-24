@@ -57,6 +57,7 @@ model User {
   dailyCalorieGoal Int?
   goalType      String?   // "weight_loss", "weight_gain", "maintain"
   activityLevel String?   // "sedentary", "light", "moderate", "active", "very_active"
+  notificationSettings String?  // JSON string for notification preferences
   
   accounts     Account[]
   sessions     Session[]

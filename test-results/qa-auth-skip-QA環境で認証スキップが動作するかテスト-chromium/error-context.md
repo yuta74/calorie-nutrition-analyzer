@@ -1,0 +1,82 @@
+# Page snapshot
+
+```yaml
+- link "Skip to content":
+  - /url: "#geist-skip-nav"
+- banner:
+  - link "Vercel logo":
+    - /url: /home
+    - button "Vercel Logo":
+      - img "Vercel Logo"
+  - navigation:
+    - navigation:
+      - link "Contact":
+        - /url: /contact
+        - paragraph: Contact
+      - link "Sign Up":
+        - /url: /signup?next=%2Fsso-api%3Furl%3Dhttps%253A%252F%252Fqa-calorie-analyzer.vercel.app%252F%26nonce%3D37687938aa17d0358be154386b6aeaf07f4f40fd097e3b2b8b57cbb89e41a17b
+        - paragraph: Sign Up
+- main:
+  - heading "Log in to Vercel" [level=1]
+  - textbox "Email Address"
+  - button "Continue with Email"
+  - button "Continue with Google":
+    - img
+    - text: Continue with Google
+  - button "Continue with GitHub":
+    - img
+    - text: Continue with GitHub
+  - button "Continue with SAML SSO":
+    - img
+    - text: Continue with SAML SSO
+  - button "Continue with Passkey":
+    - img
+    - text: Continue with Passkey
+  - button "Show other options"
+  - paragraph:
+    - text: Don't have an account?
+    - link "Sign Up":
+      - /url: /signup?next=%2Fsso-api%3Furl%3Dhttps%3A%2F%2Fqa-calorie-analyzer.vercel.app%2F%26nonce%3D37687938aa17d0358be154386b6aeaf07f4f40fd097e3b2b8b57cbb89e41a17b
+- contentinfo:
+  - navigation "Vercel Directory":
+    - link "Vercel logo":
+      - /url: /home
+      - img "Vercel logo"
+    - list:
+      - listitem:
+        - link "Home":
+          - /url: /home
+      - listitem:
+        - link "Docs":
+          - /url: /docs
+      - listitem:
+        - link "Guides":
+          - /url: /guides
+      - listitem:
+        - link "Help":
+          - /url: /help
+      - listitem:
+        - link "Contact":
+          - /url: /contact
+      - listitem:
+        - button "Legal":
+          - text: Legal
+          - img
+    - link "Loading status…":
+      - /url: https://vercel-status.com
+      - paragraph: Loading status…
+    - group "Select a display theme:":
+      - text: "Select a display theme:"
+      - radio "system"
+      - text: system
+      - img
+      - radio "light"
+      - text: light
+      - img
+      - radio "dark"
+      - text: dark
+      - img
+  - paragraph: © 2025, Vercel Inc.
+- alert
+- img
+```

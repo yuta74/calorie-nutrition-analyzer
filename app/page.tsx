@@ -114,7 +114,7 @@ export default function Home() {
             </Link>
             <Link
               href="/goals"
-              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
             >
               目標設定
             </Link>
@@ -123,6 +123,12 @@ export default function Home() {
               className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
             >
               カレンダー
+            </Link>
+            <Link
+              href="/notifications"
+              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-center"
+            >
+              通知設定
             </Link>
             {session && (
               <button
